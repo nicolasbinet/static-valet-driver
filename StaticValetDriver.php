@@ -1,6 +1,10 @@
 <?php
 
-class StaticValetDriver extends ValetDriver
+namespace Valet\Drivers\Custom;
+
+use Valet\Drivers\LaravelValetDriver;
+
+class StaticValetDriver extends LaravelValetDriver
 {
     /**
      * Determine if the driver serves the request.
@@ -10,7 +14,7 @@ class StaticValetDriver extends ValetDriver
      * @param  string  $uri
      * @return bool
      */
-    public function serves($sitePath, $siteName, $uri)
+    public function serves(string $sitePath, string $siteName, string $uri): bool
     {
         if (file_exists($sitePath.'/static')) {
             return true;
@@ -27,9 +31,9 @@ class StaticValetDriver extends ValetDriver
      * @param  string  $uri
      * @return string|false
      */
-    public function isStaticFile($sitePath, $siteName, $uri)
+    public function isStaticFile(string $sitePath, string $siteName, string $uri)
     {
-        if (file_exists($staticFilePath = $sitePath.'/public/'.$uri)) {
+        if (file_exists($staticFilePath = $sitePath.'/static/'.$uri)) {
             return $staticFilePath;
         }
 
@@ -44,11 +48,11 @@ class StaticValetDriver extends ValetDriver
      * @param  string  $uri
      * @return string
      */
-    public function frontControllerPath($sitePath, $siteName, $uri)
+    public function frontControllerPath(string $sitePath, string $siteName, string $uri): ?string
     {
         if (substr($uri, -1) === '/') {
             $uri = 'index.php';
         }
-        return $sitePath.'/public/'.$uri;
+        return $sitePath.'/static/'.$uri;
     }
 }
